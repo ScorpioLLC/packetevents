@@ -23,6 +23,7 @@ import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.event.SimplePacketListenerAbstract;
 import com.github.retrooper.packetevents.event.simple.PacketPlayReceiveEvent;
 import com.github.retrooper.packetevents.event.simple.PacketPlaySendEvent;
+import com.github.retrooper.packetevents.netty.channel.ChannelHelper;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.particle.Particle;
 import com.github.retrooper.packetevents.protocol.particle.type.ParticleTypes;
@@ -60,7 +61,7 @@ public class PacketEventsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         //Register your listeners
-        PacketEvents.getAPI().getSettings().debug(false).bStats(true);
+        PacketEvents.getAPI().getSettings().debug(false).bStats(true).checkForUpdates(false);
         PacketEvents.getAPI().init();
         SimplePacketListenerAbstract listener = new SimplePacketListenerAbstract(PacketListenerPriority.HIGH,
                 true, false) {
@@ -134,13 +135,14 @@ public class PacketEventsPlugin extends JavaPlugin {
                     } else {
                         event.getUser().sendMessage(ChatColor.RED + "player null, but hi dude!!!");
                     }
+                    System.out.println("Pipeline: " + ChannelHelper.pipelineHandlerNamesAsString(event.getChannel()));
                 } else if (event.getPacketType() == PacketType.Play.Server.CHAT_MESSAGE) {
                     WrapperPlayServerChatMessage chatMessage = new WrapperPlayServerChatMessage(event);
-                    /*event.setCancelled(true);
+                    event.setCancelled(true);
                     WrapperPlayServerChatMessage clone = new WrapperPlayServerChatMessage((Component) null, null);
-                    clone.readData(chatMessage);
+                    clone.copy(chatMessage);
                     PacketEvents.getAPI().getProtocolManager().sendPacketSilently(event.getChannel(), clone);
-                    System.out.println("Delayed " + chatMessage.getChatComponentJson());*/
+                    System.out.println("Delayed " + chatMessage.getChatComponentJson());
                 }
             }
         };

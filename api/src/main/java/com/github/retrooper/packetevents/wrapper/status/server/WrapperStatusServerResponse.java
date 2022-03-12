@@ -44,21 +44,21 @@ public class WrapperStatusServerResponse extends PacketWrapper<WrapperStatusServ
     }
 
     @Override
-    public void readData() {
+    public void read() {
         componentJson = readString();
         if (HANDLE_JSON) {
-            component = AdventureSerializer.GSON.serializer().fromJson(componentJson, JsonObject.class);
+            component = AdventureSerializer.getGsonSerializer().serializer().fromJson(componentJson, JsonObject.class);
         }
     }
 
     @Override
-    public void readData(WrapperStatusServerResponse wrapper) {
+    public void copy(WrapperStatusServerResponse wrapper) {
         componentJson = wrapper.componentJson;
         component = wrapper.component;
     }
 
     @Override
-    public void writeData() {
+    public void write() {
         if (HANDLE_JSON) {
             componentJson = component.toString();
         }

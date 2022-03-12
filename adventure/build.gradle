@@ -1,59 +1,12 @@
-plugins {
-    id 'java-library'
-    id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
-}
-
-group = 'com.github.retrooper'
-version = '2.0.0'
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven { url 'https://jitpack.io' }
-    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+dependencies {
+    api 'net.kyori:adventure-api:4.10.1'
+    api 'net.kyori:adventure-text-serializer-gson:4.10.1'
+    api 'net.kyori:adventure-text-serializer-gson-legacy-impl:4.10.1'
+    api 'net.kyori:adventure-text-serializer-legacy:4.10.1'
 }
 
 shadowJar {
-    //Just for jitpack to work
-    archiveVersion.set('')
     dependencies {
         exclude(dependency('com.google.code.gson:gson:2.8.0'))
     }
-    minimize()
-}
-
-dependencies {
-    api 'net.kyori:adventure-api:4.10.0'
-    api 'net.kyori:adventure-text-serializer-gson:4.10.0'
-    api 'net.kyori:adventure-text-serializer-legacy:4.10.0'
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.github.retrooper.packetevents'
-            artifactId = 'adventure'
-            from(components.java)
-        }
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-
-//So that SNAPSHOT is always the latest SNAPSHOT
-configurations.all {
-    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
-}
-
-//So we only produce one jar with shadowJar. No suffixes. Just replace what the original jar would be named.
-tasks.jar.configure {
-    classifier = 'default'
-}
-
-tasks.shadowJar.configure {
-    classifier = null
 }
